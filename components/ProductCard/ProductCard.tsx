@@ -1,71 +1,87 @@
-import { Product } from '../../types/product';
 import {
   StyleSheet,
   View,
   Text,
   Image,
-  TouchableHighlight,
-} from 'react-native';
+  TouchableHighlight
+} from 'react-native'
+import React from 'react'
+
+import { type Product } from '../../types/product'
+import DefaultPicture from '../../Icons/DefaultPicture/DefaultPicture'
+import { ACCENT_COLOR } from '../../constants/colors'
 
 interface Props {
-  product: Product;
-  onPress: (product: Product) => void;
+  product: Product
+  onPress: (product: Product) => void
 }
 
-export const ProductCard: React.FC<Props> = ({ product, onPress }) => {
-  return (
-    <TouchableHighlight
-      activeOpacity={0.6}
-      underlayColor="#DDDDDD"
-      onPress={() => onPress(product)}
-      style={styles.container}
-    >
-      <View>
-        <View style={styles.imageContainer}>
+const ProductCard: React.FC<Props> = ({ product, onPress }) => (
+  <TouchableHighlight
+    activeOpacity={0.6}
+    underlayColor="#DDDDDD"
+    onPress={() => { onPress(product) }}
+    style={styles.container}
+  >
+    <View>
+      <View style={styles.imageContainer}>
+        {product.image
+          ? (
           <Image
             style={styles.image}
             source={{
-              uri: product.image,
+              uri: product.image
             }}
           />
-        </View>
-        <Text style={styles.title}>{product.title}</Text>
-        <Text style={styles.text}>${product.price}</Text>
+            )
+          : (
+          <DefaultPicture style={styles.image} />
+            )}
       </View>
-    </TouchableHighlight>
-  );
-};
+
+      <Text style={styles.title}>{product.title}</Text>
+
+      <Text style={styles.price}>${product.price}</Text>
+    </View>
+  </TouchableHighlight>
+)
+
+export default React.memo(ProductCard)
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15,
-    paddingBottom: 30,
+    backgroundColor: '#fff',
+    borderColor: ACCENT_COLOR,
     borderRadius: 4,
-    backgroundColor: '#ccc',
+    borderStyle: 'solid',
+    borderWidth: 1,
     marginBottom: 20,
+    padding: 15,
+    paddingBottom: 30
+  },
+
+  image: {
+    height: 300,
+    resizeMode: 'contain',
+    width: '100%'
   },
 
   imageContainer: {
     backgroundColor: '#fff',
     borderRadius: 4,
     marginBottom: 30,
-    padding: 20,
+    padding: 20
   },
 
-  image: {
-    width: '100%',
-    height: 300,
-    resizeMode: 'contain',
+  price: {
+    color: ACCENT_COLOR,
+    fontSize: 17,
+    fontWeight: '400'
   },
 
   title: {
-    fontWeight: '700',
     fontSize: 23,
-    marginBottom: 20,
-  },
-
-  text: {
-    fontWeight: '400',
-    fontSize: 17,
-  },
-});
+    fontWeight: '700',
+    marginBottom: 20
+  }
+})

@@ -1,45 +1,63 @@
-import { Product } from '../../types/product';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Image,
-  TouchableHighlight,
-} from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import { StyleSheet, View, Text, Image } from 'react-native';
+import { type RouteProp, useRoute } from '@react-navigation/native';
 
-export const ProductDetails: React.FC = () => {
-  const route = useRoute() as { params: { product: Product } };
+import DefaultPicture from '../../Icons/DefaultPicture/DefaultPicture';
+import { type RootStackParamList } from '../../types/navigation';
+import { ACCENT_COLOR } from '../../constants/colors';
 
-  const product = route.params?.product;
+type ProductScreenRouteProp = RouteProp<RootStackParamList, 'Product'>;
+
+const ProductDetails: React.FC = () => {
+  const route = useRoute<ProductScreenRouteProp>();
+
+  const { product } = route.params;
 
   return (
-    <View
-      style={styles.container}
-    >
-        <View style={styles.imageContainer}>
+    <View style={styles.container}>
+      <View style={styles.imageContainer}>
+        {product.image ? (
           <Image
             style={styles.image}
             source={{
               uri: product.image,
             }}
           />
-        </View>
-        <Text style={styles.title}>{product.title}</Text>
-        <Text style={styles.text}>${product.price}</Text>
-        <Text style={styles.description}>{product.description}</Text>
+        ) : (
+          <DefaultPicture style={styles.image} />
+        )}
+      </View>
+
+      <Text style={styles.title}>{product.title}</Text>
+
+      <Text style={styles.price}>${product.price}</Text>
+
+      <Text style={styles.description}>{product.description}</Text>
     </View>
   );
 };
 
+export default ProductDetails;
+
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#fff',
+    borderRadius: 4,
+    flex: 1,
     padding: 15,
     paddingBottom: 30,
-    borderRadius: 4,
-    backgroundColor: '#ccc',
-    marginBottom: 20,
-    flex: 1,
+  },
+
+  description: {
+    fontSize: 14,
+    fontStyle: 'italic',
+    fontWeight: '400',
+    marginTop: 15,
+  },
+
+  image: {
+    height: 300,
+    resizeMode: 'contain',
+    width: '100%',
   },
 
   imageContainer: {
@@ -49,27 +67,15 @@ const styles = StyleSheet.create({
     padding: 20,
   },
 
-  image: {
-    width: '100%',
-    height: 300,
-    resizeMode: 'contain',
+  price: {
+    color: ACCENT_COLOR,
+    fontSize: 17,
+    fontWeight: '400',
   },
 
   title: {
-    fontWeight: '700',
     fontSize: 23,
+    fontWeight: '700',
     marginBottom: 20,
-  },
-
-  text: {
-    fontWeight: '400',
-    fontSize: 17,
-  },
-
-  description: {
-    fontWeight: '400',
-    fontSize: 14,
-    fontStyle: "italic",
-    marginTop: 15,
   },
 });

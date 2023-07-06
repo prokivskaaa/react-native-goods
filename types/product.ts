@@ -4,11 +4,11 @@ interface Rating {
 }
 
 export interface Product {
-  category: string;
-  description: string;
   id: number;
-  image: string;
-  price: number;
   title: string;
-  rating: Rating;
+  price: number;
+  description: string;
+  category?: string;
+  image?: string;
+  rating?: Rating;
 }

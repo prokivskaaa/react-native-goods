@@ -1,43 +1,53 @@
+import { IconButton } from '@react-native-material/core';
+import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { ProductDetails } from './screens/ProductDetails/ProductDetails';
-import { ProductsList } from './screens/ProductsList';
+import { Provider } from 'react-redux';
 
-const Stack = createNativeStackNavigator();
+import AddProduct from './screens/AddProduct';
+import ProductDetails from './screens/ProductDetails';
+import ProductsList from './screens/ProductsList';
+import { ACCENT_COLOR } from './constants/colors';
+import { store } from './redux/store';
+import { type RootStackParamList } from './types/navigation';
 
-export default function App() {
-  return (
-    // <View style={styles.container}>
-    //   <Text>You are piska</Text>
-    //   <ProductsList />
-    //   <StatusBar style="auto" />
-    // </View>
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
+const App: React.FC = () => (
+  <Provider store={store}>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Home"
+          name="Products"
           component={ProductsList}
-          options={{ title: 'Products' }}
+          options={({ navigation }) => ({
+            title: 'Products',
+            headerRight: () => (
+              <IconButton
+                color="white"
+                icon={(props) => (
+                  <Icon name="plus" {...props} color={ACCENT_COLOR} />
+                )}
+                onPress={() => navigation.navigate('AddProduct')}
+              />
+            ),
+          })}
         />
+
         <Stack.Screen
           name="Product"
           component={ProductDetails}
           options={({ route }) => ({ title: route.params.product.title })}
         />
-        {/* <Stack.Screen name="Profile" component={ProfileScreen} /> */}
+
+        <Stack.Screen
+          name="AddProduct"
+          component={AddProduct}
+          options={{ title: 'Add Product' }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
-  );
-}
+  </Provider>
+);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
